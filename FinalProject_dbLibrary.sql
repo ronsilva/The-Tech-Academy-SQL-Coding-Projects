@@ -539,10 +539,11 @@ CREATE PROC LP.uspBorrowersNoBook
 AS
 /*3.) Retrieve the names of all borrowers who do not have any books checked out.*/  
 SELECT DISTINCT Name 'Borrowers W/O Books'
-FROM BORROWER br INNER JOIN BOOK_LOANS bl ON br.CardNo = bl.CardNo
-WHERE br.CardNo = bl.CardNo
+FROM BORROWER br 
+LEFT JOIN BOOK_LOANS bl ON br.CardNo = bl.CardNo
+WHERE br.CardNo not in (SELECT CardNo FROM BOOK_LOANS)
 GO
- 
+
 CREATE PROC LP.uspSharptownBorrowerDueToday
 AS
 /*4.) For each book that is loaned out from the "Sharpstown" branch and whose DueDate is today, retrieve the book title, the borrower's name, and the borrower's address.*/  
